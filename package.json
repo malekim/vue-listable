@@ -1,0 +1,39 @@
+{
+  "name": "vue-listable",
+  "version": "0.0.1",
+  "description": "An advanced data table plugin for vue.js",
+  "main": "build/vue-listable.min.js",
+  "scripts": {
+    "build": "npm run build:unpkg & npm run build:es & npm run build:umd",
+    "build:umd": "NODE_ENV=production rollup -c --format umd --file build/vue-listable.umd.js",
+    "build:es": "NODE_ENV=production rollup -c --format es --file build/vue-listable.esm.js",
+    "build:unpkg": "NODE_ENV=production rollup -c --format iife --file build/vue-listable.min.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/malekim/vue-listable.git"
+  },
+  "keywords": [
+    "vue",
+    "vuejs",
+    "plugin",
+    "datatable",
+    "table",
+    "list",
+    "grid"
+  ],
+  "author": "Lukasz Malek <dev@malek.im>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/malekim/vue-listable/issues"
+  },
+  "homepage": "https://github.com/malekim/vue-listable#readme",
+  "devDependencies": {
+    "@babel/core": "^7.7.4",
+    "@babel/preset-env": "^7.7.4",
+    "rollup": "^1.27.8",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-terser": "^5.1.2"
+  }
+}
