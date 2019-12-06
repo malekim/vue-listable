@@ -2,12 +2,11 @@
   "name": "vue-listable",
   "version": "0.0.1",
   "description": "An advanced data table plugin for vue.js",
-  "main": "build/vue-listable.min.js",
+  "main": "build/vue-listable.umd.js",
+  "module": "build/vue-listable.esm.js",
+  "unpkg": "build/vue-listable.min.js",
   "scripts": {
-    "build": "npm run build:unpkg & npm run build:es & npm run build:umd",
-    "build:umd": "NODE_ENV=production rollup -c --format umd --file build/vue-listable.umd.js",
-    "build:es": "NODE_ENV=production rollup -c --format es --file build/vue-listable.esm.js",
-    "build:unpkg": "NODE_ENV=production rollup -c --format iife --file build/vue-listable.min.js",
+    "build": "NODE_ENV=production rollup -c && node-sass --include-path scss src/scss/listable.scss build/vue-listable.min.css --output-style=compressed",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -32,8 +31,12 @@
   "devDependencies": {
     "@babel/core": "^7.7.4",
     "@babel/preset-env": "^7.7.4",
+    "node-sass": "^4.13.0",
     "rollup": "^1.27.8",
     "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-buble": "^0.19.8",
+    "rollup-plugin-eslint": "^7.0.0",
+    "rollup-plugin-postcss": "^2.0.3",
     "rollup-plugin-terser": "^5.1.2"
   }
 }
