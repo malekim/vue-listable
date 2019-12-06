@@ -1,77 +1,87 @@
 .listable {
   display: table;
   width: 100%;
-}
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: 0.8rem;
 
-.listable-header,
-.listable-body {
-  display: table-row-group;
-}
+  .listable-header,
+  .listable-body {
+    display: table-row-group;
+  }
 
-.listable-header-row,
-.listable-row {
-  display: table-row;
-}
+  .listable-header-row,
+  .listable-tr {
+    display: table-row;
+  }
 
-.listable-header {
-  background-color: rgba(55, 131, 209, 0.2);
-}
+  .listable-header {
+    background-color: rgba(55, 131, 209, 0.2);
+    .listable-th {
+      font-weight: 500;
+      color:rgba(0, 0, 0, 0.54);
+    }
+  }
 
-.listable-row:hover {
-  background-color: rgb(240, 250, 240);
-}
+  .listable-body {
+    .listable-tr:not(.listable-tr-active):hover {
+      background-color: rgb(240, 250, 240);
+    }
+  }
 
-.listable-header-cell,
-.listable-body-cell {
-  display: table-cell;
-  padding: 5px;
-  vertical-align: middle;
-}
+  .listable-th,
+  .listable-td {
+    display: table-cell;
+    padding: 5px;
+    vertical-align: middle;
+    border: 1px solid rgb(219, 219, 219);
+  }
 
-.listable-row.listable-row-active {
-  background-color: rgb(255, 165, 0);
-}
+  .listable-tr.listable-tr-active {
+    background-color: rgb(255, 165, 0);
+  }
 
-.listable-checkbox {
-  width: 15px;
-  height: 15px;
-  border: 1px solid rgb(0, 0, 0);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin: auto;
-}
+  .listable-checkbox {
+    width: 15px;
+    height: 15px;
+    border: 1px solid rgb(0, 0, 0);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: auto;
+  }
 
-.listable-body-cell-checkbox {
-  width: 30px;
-}
+  .listable-td-checkbox {
+    width: 30px;
+  }
 
-.listable-header-search {
-  border: 2px solid rgb(55, 131, 209);
-  width: 100%;
-}
+  .listable-search {
+    border: 2px solid rgb(55, 131, 209);
+    width: 100%;
+  }
 
-.listable-row.listable-row-active .listable-checkbox {
-  background-color: rgb(0, 0, 0);
-}
+  .listable-tr.listable-tr-active .listable-checkbox {
+    background-color: rgb(0, 0, 0);
+  }
 
-.listable-row.listable-row-active .listable-checkbox::before,
-.listable-row.listable-row-active .listable-checkbox::after {
-  position: absolute;
-  content: "";
-  width: 9px;
-  height: 2px;
-  background-color: rgb(255, 255, 255);
-  left: 0;
-  right: 0;
-  margin: auto;
-}
+  .listable-tr.listable-tr-active .listable-checkbox::before,
+  .listable-tr.listable-tr-active .listable-checkbox::after {
+    position: absolute;
+    content: "";
+    width: 9px;
+    height: 2px;
+    background-color: rgb(255, 255, 255);
+    left: 0;
+    right: 0;
+    margin: auto;
+  }
 
-.listable-row.listable-row-active .listable-checkbox::before {
-  transform: rotate(45deg);
-}
+  .listable-tr.listable-tr-active .listable-checkbox::before {
+    transform: rotate(45deg);
+  }
 
-.listable-row.listable-row-active .listable-checkbox::after {
-  transform: rotate(-45deg);
+  .listable-tr.listable-tr-active .listable-checkbox::after {
+    transform: rotate(-45deg);
+  }
 }

@@ -2,6 +2,7 @@ const listable = {
   render: function (createElement) {
     const table = this.generateTable(createElement);
     const paginator = this.generatePaginator(createElement);
+    this.searchable = this.isSearchable();
     return createElement(
       "div",
       {
@@ -14,11 +15,7 @@ const listable = {
     );
   },
   props: {
-    actions: {
-      type: Array,
-      default: () => []
-    },
-    cells: {
+    headings: {
       type: Array,
       default: () => []
     },
@@ -35,6 +32,8 @@ const listable = {
     return {
       // IDs of marked rows
       checked: [],
+      // is_searchable
+      searchable: false,
       // columns with search
       searched: {}
     };
@@ -44,8 +43,8 @@ const listable = {
   },
   methods: {
     checkErrors() {
-      if (this.data.length > 0 && this.cells.length !== this.data[0].length) {
-        console.error(`Header length(${this.cells.length}) and row length(${this.data[0].length}) are not equal.`);
+      if (this.data.length > 0 && this.headings.length !== this.data[0].length) {
+        console.error(`Header length(${this.headings.length}) and row length(${this.data[0].length}) are not equal.`);
       }
     },
     generateTable(createElement) {
@@ -78,27 +77,40 @@ const listable = {
       header_rows.push(createElement(
         "div",
         {
-          class: "listable-header-row"
+          class: {
+            "listable-tr": true,
+            "listable-tr-active": this.checked.length > 0 && this.checked.length === this.data.length
+          }
         },
         [
           this.generateHeaderCells(createElement, false)
         ]
       ));
-
-      header_rows.push(createElement(
-        "div",
-        {
-          class: {
-            "listable-header-row": true,
-            "listable-header-search-row": true
-          }
-        },
-        [
-          this.generateHeaderCells(createElement, true)
-        ]
-      ));
+      
+      if (this.searchable) {
+        header_rows.push(createElement(
+          "div",
+          {
+            class: {
+              "listable-tr": true,
+              "listable-tr-search": true
+            }
+          },
+          [
+            this.generateHeaderCells(createElement, true)
+          ]
+        ));
+      }
 
       return header_rows;
+    },
+    isSearchable() {
+      for (const index in this.headings) {
+        if (this.headings[index].search) {
+          return true;
+        }
+      }
+      return false;
     },
     generateHeaderCells(createElement, search_row) {
       const header_cells = [];
@@ -108,30 +120,58 @@ const listable = {
             "div",
             {
               class: {
-                "listable-header-cell": true,
-                "listable-header-cell-checkbox": true
+                "listable-th": true,
+                "listable-th-checkbox": true
               }
             },
-            []
+            [
+              (() => {
+                if (search_row) {
+                  return null;
+                }
+                return createElement(
+                  "div",
+                  {
+                    class: {
+                      "listable-checkbox": true
+                    },
+                    on: {
+                      click: () => {
+                        if (this.checked.length > 0) {
+                          this.checked = [];
+                        }
+                        else {
+                          this.checked = [];
+                          for (const row_index in this.data) {
+                            this.checked.push(row_index);
+                          }
+                        }
+                        this.$emit("checked", this.checked);
+                      }
+                    }
+                  }
+                )
+              })()
+            ]
           )
         );
       }
-      for (const index in this.cells) {
+      for (const index in this.headings) {
         let search_subcell = null;
         // if it is search row inside header
         if (search_row) {
-          if (this.cells[index].search) {
+          if (this.headings[index].search) {
             var timeout = null;
             search_subcell = createElement(
               "input",
               {
-                class: "listable-header-search",
+                class: "listable-search",
                 on: {
                   input: (event) => {
                     clearTimeout(timeout);
                     timeout = setTimeout(() => {
                       this.$emit("input", event.target.value);
-                      this.searched[this.cells[index].column] = event.target.value;
+                      this.searched[this.headings[index].column] = event.target.value;
                       this.$emit("search", this.searched);
                     }, 500);
                   }
@@ -140,18 +180,18 @@ const listable = {
             );
           }
         }
-        let name_subcell = null;
+        let display_label = null;
         if (!search_row) {
-          name_subcell = this.cells[index].name;
+          display_label = this.headings[index].display;
         }
         header_cells.push(
           createElement(
             "div",
             {
-              class: "listable-header-cell"
+              class: "listable-th"
             },
             [
-              name_subcell,
+              display_label,
               search_subcell
             ]
           )
@@ -171,14 +211,16 @@ const listable = {
     generateBodyRows(createElement) {
       const body_rows = [];
       for (const index in this.data) {
+        let ref = `tr_${index}`;
         body_rows.push(
           createElement(
             "div",
             {
               class: {
-                "listable-row": true,
-                "listable-row-active": this.checked.indexOf(index) !== -1
-              }
+                "listable-tr": true,
+                "listable-tr-active": this.checked.indexOf(index) !== -1
+              },
+              ref: ref
             },
             this.generateBodyRowCells(createElement, index, this.data[index])
           )
@@ -193,7 +235,7 @@ const listable = {
           createElement(
             "div",
             {
-              class: "listable-body-cell listable-body-cell-checkbox"
+              class: "listable-td listable-td-checkbox"
             },
             [
               createElement(
@@ -217,30 +259,52 @@ const listable = {
           )
         );
       }
-      for (const index in this.cells) {
-        if (this.cells[index].column === "actions") {
-          if (this.$scopedSlots.action) {
-            row_cells.push(
-              createElement(
-                "div",
-                {
-                  class: "listable-body-cell"
-                },
-                [this.$scopedSlots.action(row)]
-              )
-            );
-          }
+      for (const index in this.headings) {
+        let column_name = this.headings[index].column;
+        let row_cell = null;
+        let ref = `td_${row_index}_${index}`;
+        if (this.$scopedSlots[column_name]) {
+          let slot = this.$scopedSlots[column_name](row);
+          row_cell = createElement(
+            "div",
+            {
+              class: [
+                "listable-td"
+              ],
+              style: [],
+              ref: ref
+            },
+            [slot]
+          )
         } else {
-          row_cells.push(
-            createElement(
-              "div",
-              {
-                class: "listable-body-cell"
-              },
-              row[this.cells[index].column]
-            )
-          );
+          row_cell = createElement(
+            "div",
+            {
+              class: [
+                "listable-td"
+              ],
+              style: [],
+              ref: ref
+            },
+            (() => {
+              if (row[column_name] === undefined || row[column_name] === null) {
+                return "";
+              }
+              if (row[column_name].constructor === Array) {
+                return "";
+              }
+              if (row[column_name].constructor === Object) {
+                return "";
+              }
+              return row[column_name]
+            })()
+          )
         }
+        row_cells.push(row_cell);
+        
+        this.$nextTick(() => {
+          this.$emit("hook", this.$refs[ref], column_name, row);
+        });
       }
 
       return row_cells;
@@ -259,7 +323,7 @@ const listable = {
     }
   },
   beforeDestroy() {
-
+    //
   }
 }
 export default listable;
