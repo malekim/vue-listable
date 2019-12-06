@@ -19,5 +19,14 @@ module.exports = {
     ],
     "no-console": ["off"],
     "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["build/*"],
+      "rules": {
+        "space-before-function-paren": ["off"],
+        "comma-spacing": ["off"]
+      }
+    }
+  ],
 };
