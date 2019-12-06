@@ -7,6 +7,7 @@
   "unpkg": "build/vue-listable.min.js",
   "scripts": {
     "build": "NODE_ENV=production rollup -c && node-sass --include-path scss src/scss/listable.scss build/vue-listable.min.css --output-style=compressed",
+    "watch": "rollup -c -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
