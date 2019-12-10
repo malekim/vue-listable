@@ -1,6 +1,6 @@
 {
   "name": "vue-listable",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "An advanced data table plugin for vue.js",
   "main": "build/vue-listable.umd.js",
   "module": "build/vue-listable.esm.js",
