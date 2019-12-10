@@ -236,6 +236,16 @@ responsiveness.
 <listable :responsive="true" />
 ```
 
+## Handle empty rows
+
+```html
+<listable>
+  <template slot="empty">
+    No data
+  </template>
+</listable>
+```
+
 ## License
 
 `vue-listable` uses the MIT License (MIT). Please see the [license file](https://github.com/malekim/vue-listable/blob/master/LICENSE) for more information.

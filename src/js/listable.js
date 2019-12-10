@@ -74,7 +74,7 @@ const listable = {
   methods: {
     calculateColspan() {
       let colspan = this.headings.length;
-      if (this.checkbox) {
+      if (this.checkbox && this.data.length > 0) {
         colspan += 1;
       }
       return colspan;
@@ -155,7 +155,7 @@ const listable = {
     },
     generateHeaderCells(createElement, search_row) {
       const header_cells = [];
-      if (this.checkbox) {
+      if (this.checkbox && this.data.length > 0) {
         header_cells.push(
           createElement(
             "th",
@@ -264,8 +264,36 @@ const listable = {
       }
       this.$emit("checked", this.checked);
     },
+    generateEmptyRow(createElement) {
+      return createElement(
+        "tr",
+        {
+          class: {
+            "listable-tr": true,
+            "listable-tr-empty": true
+          }
+        },
+        [
+          createElement(
+            "td",
+            {
+              class: "listable-td",
+              attrs: {
+                colspan: this.colspan
+              }
+            },
+            [
+              this.$slots.empty
+            ]
+          )
+        ]
+      )
+    },
     generateBodyRows(createElement) {
       const body_rows = [];
+      if (this.data.length == 0) {
+        body_rows.push(this.generateEmptyRow(createElement))
+      }
       for (const index in this.data) {
         if (this.responsiveMode) {
           body_rows.push(
