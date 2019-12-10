@@ -100,6 +100,27 @@ export default {
 </script>
 ```
 
+### @expanded
+
+Type: Function
+
+Default: none
+
+Executes after row expand.
+
+```html
+<listable @expanded="onExpanded" />
+<script>
+export default {
+  methods: {
+    onExpanded(expanded) {
+      console.log(expanded);
+    }
+  }
+}
+</script>
+```
+
 ### headings
 
 Type: Array
@@ -184,6 +205,35 @@ If set to true, first column will contain checkbox.
 
 ```html
 <listable :checkbox="true" />
+```
+
+### expandable
+
+Type: Boolean
+
+Default: false
+
+If set to true, row may be expanded with expander slot.
+
+```html
+<listable :expandable="true">
+  <div slot="expander" slot-scope="item">
+    {{ item }}
+  </div>
+</listable>
+```
+
+### responsive
+
+Type: Boolean
+
+Default: true
+
+If set to true, listable will handle table 
+responsiveness.
+
+```html
+<listable :responsive="true" />
 ```
 
 ## License
