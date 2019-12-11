@@ -100,6 +100,52 @@ export default {
 </script>
 ```
 
+### @sorted
+
+Type: Function
+
+Default: none
+
+Executes after column sort.
+
+```html
+<listable :headings="headings" @sorted="onSort" />
+<script>
+export default {
+  data: () => ({
+    headings: [
+      {
+        display: "ID",
+        column: "id",
+        sortable: true,
+        descending: true
+      },
+      {
+        display: "Name",
+        column: "name"
+      },
+      {
+        display: "Date",
+        column: "created_at",
+        sortable: true,
+        descending: false
+      }
+    ]
+  }),
+  methods: {
+    onSort(sort) {
+      let column = sort.column;
+      let descending = sort.descending;
+      let ascending = !descending;
+      console.log(column);
+      console.log(descending);
+      console.log(ascending);
+    }
+  }
+}
+</script>
+```
+
 ### @expanded
 
 Type: Function
@@ -169,6 +215,22 @@ Type: Boolean
 Default: false
 
 Experimental function. Shows search input in header.
+
+##### sortable
+
+Type: Boolean
+
+Default: false
+
+Allows user to click on header column. It emits event with information about clicked column and direction (descending or not).
+
+##### descending
+
+Type: Boolean
+
+Default: true
+
+Available when column is set to sortable. True means that sort is descending, false means that sort is ascending.
 
 ### data
 
