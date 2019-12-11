@@ -1,10 +1,11 @@
 import Expander from './expander';
+import Column from './model/column';
 
 const listable = {
   components: {
     Expander
   },
-  render: function (createElement) {
+  render(createElement) {
     const table = this.generateTable(createElement);
     const paginator = this.generatePaginator(createElement);
     return createElement(
@@ -43,8 +44,8 @@ const listable = {
   },
   data() {
     return {
-      // needed for expander
-      colspan: 0,
+      // columns
+      columns: [],
       // IDs of marked rows
       checked: [],
       // IDs of expanded rows
@@ -53,6 +54,8 @@ const listable = {
       searchable: false,
       // columns with search
       searched: {},
+      // needed to debounce search
+      searchTimeout: null,
       // needed to debounce resize
       resizeTimeout: null,
       // is responsive mode turned on
@@ -64,20 +67,39 @@ const listable = {
   mounted() {
     this.$nextTick(() => {
       this.checkErrors();
+      this.columns = this.calculateColumns();
       this.searchable = this.isSearchable();
-      this.colspan = this.calculateColspan();
       if (this.responsive) {
         window.addEventListener('resize', this.handleResponsive);
       }
     });
   },
   methods: {
-    calculateColspan() {
-      let colspan = this.headings.length;
-      if (this.checkbox && this.data.length > 0) {
-        colspan += 1;
+    calculateColumns() {
+      let columns = [];
+      if (this.checkbox) {
+        let column = new Column(
+          false,
+          true,
+          "",
+          false,
+          "",
+          true
+        );
+        columns.push(column);
       }
-      return colspan;
+      for (const index in this.headings) {
+        let column = new Column(
+          this.headings[index].search,
+          false,
+          this.headings[index].display,
+          this.headings[index].sortable,
+          this.headings[index].column,
+          this.headings[index].descending
+        );
+        columns.push(column);
+      }
+      return columns;
     },
     checkErrors() {
       if (this.data.length > 0 && this.headings.length !== this.data[0].length) {
@@ -87,7 +109,6 @@ const listable = {
     generateTable(createElement) {
       const header = this.generateHeader(createElement);
       const body = this.generateBody(createElement);
-
       return createElement(
         "table",
         {
@@ -124,21 +145,22 @@ const listable = {
           }
         },
         [
-          this.generateHeaderCells(createElement, false)
+          this.generateHeaderCells(createElement)
         ]
       ));
       
-      if (this.searchable) {
+      if (this.searchable && this.data.length > 0) {
         header_rows.push(createElement(
           "tr",
           {
             class: {
               "listable-tr": true,
+              "listable-tr-checked": this.checked.length > 0 && this.checked.length === this.data.length,
               "listable-tr-search": true
             }
           },
           [
-            this.generateHeaderCells(createElement, true)
+            this.generateHeaderSearchCells(createElement)
           ]
         ));
       }
@@ -153,54 +175,21 @@ const listable = {
       }
       return false;
     },
-    generateHeaderCells(createElement, search_row) {
+    generateHeaderSearchCells(createElement) {
       const header_cells = [];
-      if (this.checkbox && this.data.length > 0) {
-        header_cells.push(
-          createElement(
-            "th",
-            {
-              class: {
-                "listable-th": true,
-                "listable-th-checkbox": true
-              }
-            },
-            [
-              (() => {
-                if (search_row) {
-                  return null;
-                }
-                return createElement(
-                  "span",
-                  {
-                    class: {
-                      "listable-checkbox": true
-                    },
-                    on: {
-                      click: this.handleAllCheckbox
-                    }
-                  }
-                )
-              })()
-            ]
-          )
-        );
-      }
-      for (const index in this.headings) {
-        let search_subcell = null;
-        // if it is search row inside header
-        if (search_row) {
-          if (this.headings[index].search) {
-            var timeout = null;
-            search_subcell = createElement(
+      for (const index in this.columns) {
+        let elements = [];
+        if (this.columns[index].searchable) {
+          elements.push(
+            createElement(
               "input",
               {
                 class: "listable-search",
                 on: {
                   input: (event) => {
                     // debounce
-                    clearTimeout(timeout);
-                    timeout = setTimeout(() => {
+                    clearTimeout(this.searchTimeout);
+                    this.searchTimeout = setTimeout(() => {
                       this.$emit("input", event.target.value);
                       this.searched[this.headings[index].column] = event.target.value;
                       this.$emit("search", this.searched);
@@ -208,25 +197,62 @@ const listable = {
                   }
                 }
               }
-            );
+            )
+          );
+        }
+        let header_cell = createElement(
+          "th",
+          {
+            class: ["listable-th"]
+          },
+          elements
+        )
+        header_cells.push(header_cell);
+      }
+      return header_cells;
+    },
+    generateHeaderCells(createElement) {
+      const header_cells = [];
+      for (const index in this.columns) {
+        let elements = [];
+        if (this.columns[index].isCheckbox) {
+          // if no data, do not render empty checkbox column
+          if (this.data.length == 0) {
+            continue;
           }
+          elements.push(
+            createElement(
+              "span",
+              {
+                class: {
+                  "listable-checkbox": true
+                },
+                on: {
+                  click: this.handleAllCheckbox
+                }
+              }
+            )
+          );
         }
-        let display_label = null;
-        if (!search_row) {
-          display_label = this.headings[index].display;
+        if (this.columns[index].display) {
+          elements.push(this.columns[index].display);
         }
-        header_cells.push(
-          createElement(
-            "th",
-            {
-              class: "listable-th"
-            },
-            [
-              display_label,
-              search_subcell
-            ]
-          )
-        );
+        let handlers = {};
+        if (this.columns[index].sortable) {
+          handlers.click = ((event) => {
+            this.handleSort(event, index);
+          });
+        }
+
+        let header_cell = createElement(
+          "th",
+          {
+            class: this.columns[index].classes,
+            on: handlers
+          },
+          elements
+        )
+        header_cells.push(header_cell);
       }
       return header_cells;
     },
@@ -249,6 +275,18 @@ const listable = {
         this.checked.push(index);
       }
       this.$emit("checked", this.checked);
+    },
+    handleSort(event, index) {
+      event.stopPropagation();
+      // trzeba znalezc kolumne na podstawie indexu
+      let column = this.columns[index];
+      this.columns[index].oppositeSort();
+      let sortable = {
+        column: column.column,
+        descending: column.descending
+      };
+      this.$emit("sorted", sortable);
+      this.$forceUpdate();
     },
     handleAllCheckbox(event) {
       event.stopPropagation();
@@ -279,7 +317,7 @@ const listable = {
             {
               class: "listable-td",
               attrs: {
-                colspan: this.colspan
+                colspan: this.columns.length
               }
             },
             [
@@ -452,7 +490,7 @@ const listable = {
           "Expander",
           {
             props: {
-              colspan: this.colspan,
+              colspan: this.columns.length,
               expanderSlot: this.$scopedSlots["expander"],
               row: row
             }
@@ -476,14 +514,16 @@ const listable = {
       clearTimeout(this.resizeTimeout);
       this.resizeTimeout = setTimeout(() => {
         let windowWidth = window.innerWidth;
-        let containerWidth = this.$refs.container.clientWidth;
-        let tableWidth = this.$refs.table.clientWidth;
-        if (windowWidth > this.responsiveMaxWidth) {
-          this.responsiveMode = false;
-        }
-        if (tableWidth > containerWidth) {
-          this.responsiveMaxWidth = windowWidth;
-          this.responsiveMode = true;
+        if (this.$refs.container) {
+          let containerWidth = this.$refs.container.clientWidth;
+          let tableWidth = this.$refs.table.clientWidth;
+          if (windowWidth > this.responsiveMaxWidth) {
+            this.responsiveMode = false;
+          }
+          if (tableWidth > containerWidth) {
+            this.responsiveMaxWidth = windowWidth;
+            this.responsiveMode = true;
+          }
         }
       }, 100);
     }

@@ -50,6 +50,7 @@
     flex-direction: column;
     justify-content: center;
     margin: auto;
+    cursor: pointer;
   }
 
   .listable-td-checkbox {
@@ -114,6 +115,30 @@
     .listable-tr {
       width: calc(100% - 25px);
       float: right;
+    }
+  }
+  .sortable {
+    position: relative;
+    cursor: pointer;
+    &::after {
+      content: "";
+      position: relative;
+      width: 0;
+      height: 0;
+      display: block;
+      margin: auto;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+    }
+    &.ascending {
+      &::after {
+        border-bottom: 6px solid rgb(55, 131, 209);
+      }
+    }
+    &.descending {
+      &::after {
+        border-top: 6px solid rgb(55, 131, 209);
+      }
     }
   }
 }
