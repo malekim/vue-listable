@@ -1,18 +1,25 @@
 var Column = class Column {
-  constructor(searchable, isCheckbox, display, sortable, column, descending) {
+  constructor(searchable, isCheckbox, display, sortable, column, ascending) {
     this.searchable = !!searchable;
     this.isCheckbox = !!isCheckbox;
     this.display = display;
     this.sortable = !!sortable;
     this.column = column;
-    this.descending = !!descending;
-    this.ascending = !descending;
+    this.ascending = ascending !== undefined ? !!ascending : true;
+    this.descending = !this.ascending;
+    this.defaultAscending = !!this.ascending;
     this.calculateClasses();
   }
 
   oppositeSort() {
     this.descending = !this.descending;
     this.ascending = !this.ascending;
+    this.calculateClasses();
+  }
+
+  resetSort() {
+    this.ascending = this.defaultAscending;
+    this.descending = !this.defaultAscending;
     this.calculateClasses();
   }
 

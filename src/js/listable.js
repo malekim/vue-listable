@@ -95,7 +95,7 @@ const listable = {
           this.headings[index].display,
           this.headings[index].sortable,
           this.headings[index].column,
-          this.headings[index].descending
+          this.headings[index].ascending
         );
         columns.push(column);
       }
@@ -278,12 +278,17 @@ const listable = {
     },
     handleSort(event, index) {
       event.stopPropagation();
-      // trzeba znalezc kolumne na podstawie indexu
+      // find column by index
       let column = this.columns[index];
+      this.columns.map((obj) => {
+        if (obj.column != column.column) {
+          obj.resetSort();
+        }
+      });
       this.columns[index].oppositeSort();
       let sortable = {
         column: column.column,
-        descending: column.descending
+        ascending: column.ascending
       };
       this.$emit("sorted", sortable);
       this.$forceUpdate();
