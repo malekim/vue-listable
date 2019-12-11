@@ -106,7 +106,7 @@ Type: Function
 
 Default: none
 
-Executes after column sort.
+Executes after column sort. Each column except clicked one is reset to default sort direction.
 
 ```html
 <listable :headings="headings" @sorted="onSort" />
@@ -118,7 +118,7 @@ export default {
         display: "ID",
         column: "id",
         sortable: true,
-        descending: true
+        ascending: true
       },
       {
         display: "Name",
@@ -128,7 +128,7 @@ export default {
         display: "Date",
         column: "created_at",
         sortable: true,
-        descending: false
+        ascending: false
       }
     ]
   }),
@@ -222,15 +222,15 @@ Type: Boolean
 
 Default: false
 
-Allows user to click on header column. It emits event with information about clicked column and direction (descending or not).
+Allows user to click on header column. It emits event with information about clicked column and direction (ascending or not).
 
-##### descending
+##### ascending
 
 Type: Boolean
 
 Default: true
 
-Available when column is set to sortable. True means that sort is descending, false means that sort is ascending.
+Available when column is set to sortable. True means that sort is ascending, false means that sort is descending.
 
 ### data
 
