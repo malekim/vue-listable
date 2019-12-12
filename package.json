@@ -8,7 +8,7 @@
   "scripts": {
     "build": "NODE_ENV=production rollup -c && node-sass --include-path scss src/scss/listable.scss build/vue-listable.min.css --output-style=compressed",
     "watch": "rollup -c -w",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "docs:dev": "vuepress dev",
     "docs:build": "vuepress build"
   },
@@ -30,11 +30,16 @@
   "bugs": {
     "url": "https://github.com/malekim/vue-listable/issues"
   },
-  "homepage": "https://github.com/malekim/vue-listable#readme",
+  "homepage": "https://malekim.github.io/vue-listable",
   "devDependencies": {
     "@babel/core": "^7.7.5",
     "@babel/preset-env": "^7.7.6",
+    "@vue/test-utils": "^1.0.0-beta.30",
+    "acorn": "^7.1.0",
+    "acorn-dynamic-import": "^4.0.0",
+    "babel-jest": "^24.9.0",
     "eslint": "^6.7.2",
+    "jest": "^24.9.0",
     "node-sass": "^4.13.0",
     "rollup": "^1.27.9",
     "rollup-plugin-babel": "^4.3.3",
@@ -42,6 +47,7 @@
     "rollup-plugin-eslint": "^7.0.0",
     "rollup-plugin-postcss": "^2.0.3",
     "rollup-plugin-terser": "^5.1.2",
-    "serialize-javascript": ">=2.1.1"
+    "serialize-javascript": ">=2.1.1",
+    "vue-jest": "^3.0.5"
   }
 }
