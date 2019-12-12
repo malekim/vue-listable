@@ -366,7 +366,7 @@ const listable = {
             )
           );
         }
-        let ref = `tr_${index}`;
+        let ref = `tr_${index}_${Date.now()}`;
         body_rows.push(
           createElement(
             "tr",
@@ -431,7 +431,7 @@ const listable = {
         }
         let column_name = this.columns[index].column;
         let row_cell = null;
-        let ref = `td_${row_index}_${index}`;
+        let ref = `td_${row_index}_${index}_${Date.now()}`;
         let responsive_th = null;
         if (this.responsiveMode) {
           responsive_th = createElement(
@@ -451,7 +451,8 @@ const listable = {
             {
               class: [
                 "listable-td",
-                `listable-td-col-${this.columns[index].column}`
+                `listable-td-col-${this.columns[index].column}`,
+                ref
               ],
               style: [],
               ref: ref
@@ -465,7 +466,8 @@ const listable = {
             {
               class: [
                 "listable-td",
-                `listable-td-col-${this.columns[index].column}`
+                `listable-td-col-${this.columns[index].column}`,
+                ref
               ],
               style: [],
               ref: ref
@@ -488,7 +490,6 @@ const listable = {
           )
         }
         row_cells.push(row_cell);
-        
         this.$nextTick(() => {
           this.$emit("hook", this.$refs[ref], column_name, row);
         });
