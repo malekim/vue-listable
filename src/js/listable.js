@@ -102,8 +102,13 @@ const listable = {
       return columns;
     },
     checkErrors() {
-      if (this.data.length > 0 && this.headings.length !== this.data[0].length) {
-        console.error(`Header's row length (${this.headings.length}) and body's row length (${this.data[0].length}) are not equal.`);
+      for (const i in this.headings) {
+        let column = this.headings[i].column;
+        for (const d in this.data) {
+          if (!this.data[d].hasOwnProperty(column)) {
+            console.error(`Data does not contain column ${column}`);
+          }
+        }
       }
     },
     generateTable(createElement) {
