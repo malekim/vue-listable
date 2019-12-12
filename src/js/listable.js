@@ -191,7 +191,7 @@ const listable = {
                     clearTimeout(this.searchTimeout);
                     this.searchTimeout = setTimeout(() => {
                       this.$emit("input", event.target.value);
-                      this.searched[this.headings[index].column] = event.target.value;
+                      this.searched[this.columns[index].column] = event.target.value;
                       this.$emit("search", this.searched);
                     }, 500);
                   }
@@ -203,7 +203,9 @@ const listable = {
         let header_cell = createElement(
           "th",
           {
-            class: ["listable-th"]
+            class: [
+              "listable-th"
+            ]
           },
           elements
         )
@@ -423,8 +425,11 @@ const listable = {
           )
         );
       }
-      for (const index in this.headings) {
-        let column_name = this.headings[index].column;
+      for (const index in this.columns) {
+        if (this.columns[index].isCheckbox) {
+          continue;
+        }
+        let column_name = this.columns[index].column;
         let row_cell = null;
         let ref = `td_${row_index}_${index}`;
         let responsive_th = null;
@@ -436,7 +441,7 @@ const listable = {
                 "listable-td-th"
               ]
             },
-            this.headings[index].display
+            this.columns[index].display
           )
         }
         if (this.$scopedSlots[column_name]) {
@@ -445,7 +450,8 @@ const listable = {
             "td",
             {
               class: [
-                "listable-td"
+                "listable-td",
+                `listable-td-col-${this.columns[index].column}`
               ],
               style: [],
               ref: ref
@@ -458,7 +464,8 @@ const listable = {
             "td",
             {
               class: [
-                "listable-td"
+                "listable-td",
+                `listable-td-col-${this.columns[index].column}`
               ],
               style: [],
               ref: ref

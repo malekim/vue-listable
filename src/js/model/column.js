@@ -31,6 +31,7 @@ var Column = class Column {
       "ascending": this.sortable && this.ascending,
       "descending": this.sortable && this.descending
     };
+    this.classes[`listable-th-col-${this.column}`] = true;
   }
 }
 
