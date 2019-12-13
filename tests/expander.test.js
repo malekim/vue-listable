@@ -49,10 +49,16 @@ describe('Component', () => {
     wrapper2.setProps({ expandable: true })
 
     wrapper2.vm.$nextTick(() => {
-      wrapper2.find('.listable-body .listable-tr').trigger('click')
+      const tr = wrapper2.find('.listable-body .listable-tr');
+      tr.trigger('click')
       wrapper2.vm.$nextTick(() => {
         expect(wrapper2.find('.listable-tr-expander').exists()).toBe(true);
         expect(wrapper2.find('.listable-tr-expander').html()).toContain('<div class="expander">Expander: Test2</div>');
+        // test expander hide
+        tr.trigger('click');
+        wrapper2.vm.$nextTick(() => {
+          expect(wrapper2.find('.listable-tr-expander').exists()).toBe(false);
+        });
       })
     })
     

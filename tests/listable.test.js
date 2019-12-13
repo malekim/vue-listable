@@ -202,6 +202,15 @@ describe('Component', () => {
     
     consoleSpy.mockReset();
   })
+
+  test('paginator', () => {
+    const wrapper = shallowMount(Listable, {
+      slots: {
+        paginator: '<div class="paginator"></div>'
+      },
+    });
+    expect(wrapper.find('.paginator').exists()).toBe(true)
+  })
   
   test('destroy', () => {
     const wrapper = shallowMount(Listable);
