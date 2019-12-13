@@ -418,7 +418,7 @@ const listable = {
             },
             [
               createElement(
-                "td",
+                "span",
                 {
                   class: "listable-checkbox",
                   on: {
@@ -456,8 +456,7 @@ const listable = {
             {
               class: [
                 "listable-td",
-                `listable-td-col-${this.columns[index].column}`,
-                ref
+                `listable-td-col-${this.columns[index].column}`
               ],
               style: [],
               ref: ref
@@ -471,8 +470,7 @@ const listable = {
             {
               class: [
                 "listable-td",
-                `listable-td-col-${this.columns[index].column}`,
-                ref
+                `listable-td-col-${this.columns[index].column}`
               ],
               style: [],
               ref: ref
