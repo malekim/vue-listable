@@ -47,7 +47,8 @@ describe('Component', () => {
   })
 
   test('Expected error', () => {
-    const consoleSpy = jest.spyOn(global.console, 'error');
+    const consoleSpy = jest.spyOn(console, 'error');
+    
     const wrapper = shallowMount(Listable, {
       propsData: { 
         headings: [
@@ -68,9 +69,9 @@ describe('Component', () => {
       }
     })
 
-    expect(consoleSpy).toHaveBeenCalledWith(
-      'Data does not contain column name'
-    );
+    console.error = (...args) => {
+      expect(args).toBe(['Data does not contain column name']);
+    };
     
     consoleSpy.mockReset();
   })
