@@ -25,6 +25,13 @@ describe('Component', () => {
   test('Checkbox', () => {
     const onCheck = jest.fn()
 
+    const data = [
+      {
+        id: 1,
+        name: "Test"
+      }
+    ];
+
     const wrapper = shallowMount(Listable, {
       propsData: {
         headings: [
@@ -37,12 +44,7 @@ describe('Component', () => {
             column: "name",
           }
         ],
-        data: [
-          {
-            id: 1,
-            name: "Test"
-          }
-        ],
+        data: data,
         checked: onCheck
       }
     })
@@ -50,9 +52,25 @@ describe('Component', () => {
     wrapper.setProps({ checkbox: true })
     wrapper.vm.$nextTick(() => {
       expect(wrapper.find('.listable-checkbox').exists()).toBe(true)
-      wrapper.find('.listable-checkbox').trigger('click')
-      //console.log(wrapper.html())
+      wrapper.find('.listable-th .listable-checkbox').trigger('click')
       expect(wrapper.emitted('checked')).toBeTruthy();
+      // checked all means all data must be in checked array
+      expect(wrapper.vm.$data.checked.length).toBe(data.length);
+      // uncheck all
+      wrapper.find('.listable-th .listable-checkbox').trigger('click')
+      expect(wrapper.emitted('checked')).toBeTruthy();
+      expect(wrapper.vm.$data.checked.length).toBe(0);
+      // check single
+      const tr = wrapper.find('.listable-body .listable-tr:first-child')
+      const checkbox = tr.find('.listable-td .listable-checkbox')
+      checkbox.trigger('click')
+      expect(wrapper.vm.$data.checked.length).toBe(1);
+      wrapper.vm.$nextTick(() => {
+        expect(tr.classes()).toContain('listable-tr-checked')
+        // uncheck single
+        wrapper.find('.listable-td .listable-checkbox:first-child').trigger('click')
+        expect(wrapper.vm.$data.checked.length).toBe(0);
+      })
     });
   })
 
@@ -183,5 +201,10 @@ describe('Component', () => {
     };
     
     consoleSpy.mockReset();
+  })
+  
+  test('destroy', () => {
+    const wrapper = shallowMount(Listable);
+    wrapper.destroy();
   })
 })
