@@ -74,6 +74,40 @@ describe('Component', () => {
     });
   })
 
+  test('Scoped slots', () => {
+    const headings = [
+      {
+        display: "ID",
+        column: "id"
+      },
+      {
+        display: "Name",
+        column: "name"
+      }
+    ];
+    const data = [
+      {
+        id: 1,
+        name: "test"
+      }
+    ];
+    let wrapper = shallowMount(Listable, {
+      propsData: {
+        headings: headings,
+        data: data
+      },
+      scopedSlots: {
+        name: '<div class="name">Name: {{ props.name }}</div>'
+      },
+    });
+
+    wrapper.setProps({ responsive: true })
+
+    wrapper.vm.$nextTick(() => {
+      expect(wrapper.find('.listable-td-col-name').html()).toContain('<div class="name">Name: test</div>')
+    })
+  })
+
   test('Checkbox with empty data', () => {
     const wrapper = shallowMount(Listable, {
       propsData: { 
