@@ -272,6 +272,18 @@ const listable = {
         this.generateBodyRows(createElement)
       );
     },
+    handleExpander(event, index) {
+      event.stopPropagation();
+
+      var idx = this.expanded.indexOf(index);
+      if (idx !== -1) {
+        this.expanded.splice(idx, 1);
+      } 
+      else {
+        this.expanded.push(index);
+      }
+      this.$emit("expanded", this.expanded);
+    },
     handleCheckbox(event, index) {
       event.stopPropagation();
       
@@ -372,6 +384,12 @@ const listable = {
           );
         }
         let ref = `tr_${index}_${Date.now()}`;
+        let handlers = {};
+        if (this.expandable) {
+          handlers.click = ((event) => {
+            this.handleExpander(event, index);
+          });
+        }
         body_rows.push(
           createElement(
             "tr",
@@ -380,22 +398,7 @@ const listable = {
                 "listable-tr": true,
                 "listable-tr-checked": this.checked.indexOf(index) !== -1
               },
-              on: {
-                click: (event) => {
-                  event.stopPropagation();
-                  if (!this.expandable) {
-                    return;
-                  }
-                  var idx = this.expanded.indexOf(index);
-                  if (idx !== -1) {
-                    this.expanded.splice(idx, 1);
-                  } 
-                  else {
-                    this.expanded.push(index);
-                  }
-                  this.$emit("expanded", this.expanded);
-                }
-              },
+              on: handlers,
               ref: ref
             },
             this.generateBodyRowCells(createElement, index, this.data[index])
