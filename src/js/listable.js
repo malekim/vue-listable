@@ -404,7 +404,7 @@ const listable = {
             this.generateBodyRowCells(createElement, index, this.data[index])
           )
         );
-        if (this.expandable && this.expanded.indexOf(index) !== -1) {
+        if (this.expandable && this.expanded.indexOf(index) !== -1 && this.$scopedSlots["expander"]) {
           body_rows.push(this.generateExpander(createElement, this.data[index]));
         }
       }
@@ -484,10 +484,7 @@ const listable = {
                 if (row[column_name] === undefined || row[column_name] === null) {
                   return "";
                 }
-                if (row[column_name].constructor === Array) {
-                  return "";
-                }
-                if (row[column_name].constructor === Object) {
+                if (row[column_name].constructor === Array || row[column_name].constructor === Object || row[column_name].constructor === Function) {
                   return "";
                 }
                 return row[column_name]
@@ -504,18 +501,16 @@ const listable = {
       return row_cells;
     },
     generateExpander(createElement, row) {
-      if (this.$scopedSlots["expander"]) {
-        return createElement(
-          "Expander",
-          {
-            props: {
-              colspan: this.columns.length,
-              expanderSlot: this.$scopedSlots["expander"],
-              row: row
-            }
+      return createElement(
+        "Expander",
+        {
+          props: {
+            colspan: this.columns.length,
+            expanderSlot: this.$scopedSlots["expander"],
+            row: row
           }
-        );
-      }
+        }
+      );
     },
     generatePaginator(createElement) {
       if (this.$slots.paginator) {

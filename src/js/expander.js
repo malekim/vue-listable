@@ -1,30 +1,28 @@
 const Expander = {
   render: function (createElement) {
-    if (this.expanderSlot) {
-      return createElement(
-        "tr",
-        {
-          class: {
-            "listable-tr": true,
-            "listable-tr-expander": true
-          }
-        },
-        [
-          createElement(
-            "td",
-            {
-              class: [
-                "listable-td"
-              ],
-              attrs: {
-                colspan: this.colspan
-              }
-            },
-            this.expanderSlot(this.row)
-          )
-        ]
-      );
-    }
+    return createElement(
+      "tr",
+      {
+        class: {
+          "listable-tr": true,
+          "listable-tr-expander": true
+        }
+      },
+      [
+        createElement(
+          "td",
+          {
+            class: [
+              "listable-td"
+            ],
+            attrs: {
+              colspan: this.colspan
+            }
+          },
+          this.expanderSlot(this.row)
+        )
+      ]
+    );
   },
   props: {
     colspan: {
