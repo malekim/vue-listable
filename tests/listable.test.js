@@ -207,6 +207,47 @@ describe('Component', () => {
     })
   })
 
+
+  test('Expected bad data', () => {
+    const headings = [
+      {
+        display: "ID",
+        column: "id"
+      },
+      {
+        display: "Name",
+        column: "name"
+      }
+    ];
+    const data = [
+      {
+        id: [1],
+        name: {test: "test"}
+      },
+      {
+        id: 2,
+        name: "test2"
+      },
+      {
+        id: 3,
+        name: () => ["test"]
+      }
+    ];
+    let wrapper = shallowMount(Listable, {
+      propsData: {
+        headings: headings,
+        data: data
+      }
+    });
+
+    wrapper.setProps({ responsive: true })
+
+    wrapper.vm.$nextTick(() => {
+      expect(wrapper.html()).toContain('<td class="listable-td listable-td-col-id"></td>');
+      expect(wrapper.html()).toContain('<td class="listable-td listable-td-col-name"></td>');
+    })
+  })
+
   test('Expected error', () => {
     const consoleSpy = jest.spyOn(console, 'error');
     
