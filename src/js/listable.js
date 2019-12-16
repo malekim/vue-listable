@@ -40,6 +40,14 @@ const listable = {
     responsive: {
       type: Boolean,
       default: true
+    },
+    hook: {
+      type: Function,
+      default: () => {}
+    },
+    rowHook: {
+      type: Function,
+      default: () => {}
     }
   },
   data() {
@@ -383,21 +391,27 @@ const listable = {
             )
           );
         }
-        let ref = `tr_${index}_${Date.now()}`;
+        let ref = `tr_${index}`;
         let handlers = {};
         if (this.expandable) {
           handlers.click = ((event) => {
             this.handleExpander(event, index);
           });
         }
+        let calculated = {
+          class: {
+            "listable-tr": true,
+            "listable-tr-checked": this.checked.indexOf(index) !== -1
+          },
+          style: {}
+        };
+        this.rowHook(calculated, this.data[index]);
         body_rows.push(
           createElement(
             "tr",
             {
-              class: {
-                "listable-tr": true,
-                "listable-tr-checked": this.checked.indexOf(index) !== -1
-              },
+              class: calculated.class,
+              style: calculated.style,
               on: handlers,
               ref: ref
             },
@@ -452,16 +466,22 @@ const listable = {
             this.columns[index].display
           )
         }
+        let calculated = {
+          class: {
+            "listable-td": true
+          },
+          style: {},
+          parent: this.$refs[`tr_${row_index}`]
+        };
+        calculated.class[`listable-td-col-${this.columns[index].column}`] = true;
+        this.hook(calculated, row, column_name);
         if (this.$scopedSlots[column_name]) {
           let slot = this.$scopedSlots[column_name](row);
           row_cell = createElement(
             "td",
             {
-              class: [
-                "listable-td",
-                `listable-td-col-${this.columns[index].column}`
-              ],
-              style: [],
+              class: calculated.class,
+              style: calculated.style,
               ref: ref
             },
             [responsive_th, slot]
@@ -471,11 +491,8 @@ const listable = {
           row_cell = createElement(
             "td",
             {
-              class: [
-                "listable-td",
-                `listable-td-col-${this.columns[index].column}`
-              ],
-              style: [],
+              class: calculated.class,
+              style: calculated.style,
               ref: ref
             },
             [
@@ -493,9 +510,6 @@ const listable = {
           )
         }
         row_cells.push(row_cell);
-        this.$nextTick(() => {
-          this.$emit("hook", this.$refs[ref], column_name, row);
-        });
       }
 
       return row_cells;

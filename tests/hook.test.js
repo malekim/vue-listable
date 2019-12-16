@@ -1,14 +1,41 @@
-import { createLocalVue, mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import Listable from '../src/js/listable';
 
+const first_page_data = [
+  {
+    id: 1,
+    price: 500,
+    paid: true
+  },
+  {
+    id: 2,
+    price: 1000,
+    paid: false
+  }
+];
+
+const second_page_data = [
+  {
+    id: 1,
+    price: 3500,
+    paid: false
+  },
+  {
+    id: 2,
+    price: 4500,
+    paid: true
+  }
+];
 describe('Component', () => {
   test('Hooks', () => {
-    const localVue = createLocalVue();
-
-    const onHook = function (ref, column, row) {
+    const onHook = function (calculated, props, column) {
       if (column == 'price') {
-        ref.classList.toggle('paid', row.paid);
+        calculated.class['paid'] = props.paid;
       }
+    }
+
+    const onRowHook = function (calculated, props) {
+      calculated.class['finished'] = props.paid;
     }
 
     const headings = [
@@ -21,64 +48,31 @@ describe('Component', () => {
         column: "price"
       }
     ];
-    const first_page_data = [
-      {
-        id: 1,
-        price: 500,
-        paid: true
-      },
-      {
-        id: 2,
-        price: 1000,
-        paid: false
-      }
-    ];
-    let swrapper = mount(Listable, {
-      localVue,
+    let swrapper = shallowMount(Listable, {
       propsData: {
-        data: first_page_data,
-        headings: headings
-      },
-      listeners: {
-        hook: onHook
+        headings: headings,
+        hook: onHook,
+        rowHook: onRowHook
       }
     });
+
+    swrapper.setProps({ data: first_page_data })
 
     const first_tr = swrapper.find('.listable-body .listable-tr:first-child');
 
     swrapper.vm.$nextTick(() => {
+      let price_td = first_tr.find('.listable-td-col-price');
+      expect(price_td.classes()).toContain('paid');
+      expect(first_tr.classes()).toContain('finished');
+      swrapper.setProps({ data: second_page_data });
       swrapper.vm.$nextTick(() => {
-        let price_td = first_tr.find('.listable-td-col-price');
+        expect(price_td.classes()).not.toContain('paid');
+        expect(first_tr.classes()).not.toContain('finished');
+        swrapper.setProps({ data: first_page_data })
         swrapper.vm.$nextTick(() => {
-          expect(swrapper.emitted('hook')).toBeTruthy();
-          expect(price_td.classes()).toContain('paid')
-          const second_page_data = [
-            {
-              id: 1,
-              price: 3500,
-              paid: false
-            },
-            {
-              id: 2,
-              price: 4500,
-              paid: true
-            }
-          ];
-          swrapper.setProps({ data: second_page_data })
-          swrapper.vm.$nextTick(() => {
-            swrapper.vm.$nextTick(() => {
-              // first td should not contain class paid
-              expect(price_td.classes()).not.toContain('paid')
-              swrapper.setProps({ data: first_page_data })
-              swrapper.vm.$nextTick(() => {
-                swrapper.vm.$nextTick(() => {
-                  expect(price_td.classes()).toContain('paid')
-                })
-              })
-            })
-          })
-        })
-      })
+          expect(price_td.classes()).toContain('paid');
+        });
+      });
     })
   })
 })
