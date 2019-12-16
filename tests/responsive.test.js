@@ -133,4 +133,67 @@ describe('Mobile', () => {
       })
     })
   });
+
+  test('Not responsive', () => {
+    window = Object.assign(window, { innerWidth: 1200 });
+    window.dispatchEvent(new Event('resize'));
+
+    const mwrapper = mount(Listable, {
+      propsData: {
+        headings: [
+          {
+            display: "ID",
+            column: "id",
+          },
+          {
+            display: "Name",
+            column: "name",
+          },
+          {
+            display: "Surname",
+            column: "surname",
+          },
+          {
+            display: "Email",
+            column: "email",
+          },
+          {
+            display: "Description",
+            column: "desc",
+          },
+          {
+            display: "Status",
+            column: "status",
+          },
+          {
+            display: "Space indent",
+            column: "indent",
+          }
+        ],
+        data: [
+          {
+            id: 1,
+            name: "Test",
+            surname: "Tested2",
+            email: "test@test.com",
+            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+            status: "active",
+            indent: 2
+          }
+        ]
+      }
+    })
+    mwrapper.setProps({ responsive: false });
+
+    mwrapper.vm.$nextTick(() => {
+      window = Object.assign(window, { innerWidth: 320 });
+      window.dispatchEvent(new Event('resize'));
+
+      mwrapper.vm.$nextTick(() => {
+        expect(mwrapper.find('.responsive-mode').exists()).toBe(false)
+      })
+    })
+
+    mwrapper.destroy();
+  });
 })

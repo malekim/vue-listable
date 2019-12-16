@@ -42,6 +42,7 @@ describe('Component', () => {
           {
             display: "Name",
             column: "name",
+            search: true
           }
         ],
         data: data,
