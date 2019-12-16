@@ -314,12 +314,14 @@ Why not refs? Refs causes update, so update for each row is slower than using ha
 
 ```html
 <template>
-  <listable
-    :headings="headings"
-    :data="items"
-    :hook="onHook"
-    :rowHook="onRowHook"
-  />
+  <div>
+    <listable
+      :headings="headings"
+      :data="items"
+      :hook="onHook"
+      :rowHook="onRowHook"
+    />
+  </div>
 </template>
 <script>
 export default {
