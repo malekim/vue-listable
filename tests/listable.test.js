@@ -194,7 +194,7 @@ describe('Component', () => {
       }
     ];
     let swrapper = shallowMount(Listable, {
-      propsData: {
+      listeners: {
         sorted: onSort
       }
     });
