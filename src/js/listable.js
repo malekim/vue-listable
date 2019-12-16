@@ -528,16 +528,14 @@ const listable = {
       clearTimeout(this.resizeTimeout);
       this.resizeTimeout = setTimeout(() => {
         let windowWidth = window.innerWidth;
-        if (this.$refs.container) {
-          let containerWidth = this.$refs.container.clientWidth;
-          let tableWidth = this.$refs.table.clientWidth;
-          if (windowWidth > this.responsiveMaxWidth) {
-            this.responsiveMode = false;
-          }
-          if (tableWidth > containerWidth) {
-            this.responsiveMaxWidth = windowWidth;
-            this.responsiveMode = true;
-          }
+        let containerWidth = this.$refs.container.clientWidth;
+        let tableWidth = this.$refs.table.clientWidth;
+        if (windowWidth > this.responsiveMaxWidth) {
+          this.responsiveMode = false;
+        }
+        if (tableWidth > containerWidth) {
+          this.responsiveMaxWidth = windowWidth;
+          this.responsiveMode = true;
         }
       }, 100);
     }
