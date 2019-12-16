@@ -298,6 +298,87 @@ responsiveness.
 <listable :responsive="true" />
 ```
 
+## Hooks
+
+Hooks are handlers for each table row and each table cell. With hook it is possible to manipulate classes and styles of rows and cells in vue way.
+
+Simple hook is to handle table cells, and rowHook is to handle table rows. 
+
+First argument of handler is always object with classes and styles applied to handled element.
+
+Second argument is always row of currently operated data.
+
+Third argument in simple hook is column name.
+
+Why not refs? Refs causes update, so update for each row is slower than using handlers. 
+
+```html
+<template>
+  <listable 
+    :hook="onHook"
+    :rowHook="onRowHook"
+  />
+</template>
+<script>
+export default {
+  data: () => ({
+    headings: [
+      {
+        display: "ID",
+        column: "id",
+      },
+      {
+        display: "Name",
+        column: "name",
+        search: true
+      },
+      {
+        display: "Paid",
+        column: "is_paid"
+      },
+      {
+        display: "New",
+        column: "is_new"
+      }
+    ],
+    items: [
+      {
+        id: 1,
+        name: "Shoes"
+        is_paid: true,
+        is_new: false
+      },
+      {
+        id: 2,
+        name: "Apple"
+        is_paid: false,
+        is_new: true
+      }
+    ]
+  }),
+  methods: {
+    onHook(calculated, row, column) {
+      console.info(row);
+      if (column == "id") {
+        calculated.style.backgroundColor = 'rgb(225, 225, 225)';
+      }
+      if (column == "is_new") {
+        // if row.is_new is true a class new is added
+        // if row.is_new is false a class new is not added
+        calculated.class['new'] = row.is_new;
+      }
+    },
+    onRowHook(calculated, row) {
+      console.info(row);
+      // if row.paid is true a class paid is added
+      // if row.paid is false a class paid is not added
+      calculated.class['paid'] = row.is_paid;
+    }
+  }
+}
+</script>
+```
+
 ## Handle empty rows
 
 ```html
