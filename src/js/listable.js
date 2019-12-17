@@ -554,6 +554,13 @@ const listable = {
       }, 100);
     }
   },
+  watch: {
+    data: {
+      handler() {
+        this.checked = [];
+      }
+    }
+  },
   updated() {
     this.$nextTick(() => {
       this.handleResponsive();
