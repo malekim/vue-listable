@@ -1,4 +1,4 @@
-import listable from './js/listable';
+import listable from './components/listable';
 
 const VueListable = {
   install(Vue, options) {

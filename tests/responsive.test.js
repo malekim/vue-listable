@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import Listable from '../src/js/listable';
+import Listable from '../src/js/components/listable';
 
 jest.useFakeTimers();
 

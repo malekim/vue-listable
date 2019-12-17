@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { createLocalVue } from 'vue-test-utils'
-import VueListable from '../src/index'
+import VueListable from '../src/js/index'
 
 it('Usage', () => {
   const localVue = createLocalVue();

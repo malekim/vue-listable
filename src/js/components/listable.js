@@ -1,5 +1,5 @@
 import Expander from './expander';
-import Column from './model/column';
+import Column from '../model/column';
 
 const listable = {
   components: {
