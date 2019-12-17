@@ -557,7 +557,12 @@ const listable = {
   watch: {
     data: {
       handler() {
-        this.checked = [];
+        /**
+         * Reset checked options when page turns
+         */
+        if (this.checkbox) {
+          this.checked = [];
+        }
       }
     }
   },
