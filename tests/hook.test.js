@@ -50,7 +50,6 @@ describe('Component', () => {
     ];
     let swrapper = shallowMount(Listable, {
       propsData: {
-        checkbox: true,
         headings: headings,
         hook: onHook,
         rowHook: onRowHook

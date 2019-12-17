@@ -61,6 +61,5 @@ describe('Component', () => {
         });
       })
     })
-    
   })
 })

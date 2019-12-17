@@ -16,65 +16,6 @@ describe('Component', () => {
     expect(wrapper.find('.listable').exists()).toBe(true)
   })
 
-  test('Checkbox with empty data', () => {
-    const wrapper = shallowMount(Listable)
-
-    expect(wrapper.find('.listable-checkbox').exists()).toBe(false)
-  })
-
-  test('Checkbox', () => {
-    const onCheck = jest.fn()
-
-    const data = [
-      {
-        id: 1,
-        name: "Test"
-      }
-    ];
-
-    const wrapper = shallowMount(Listable, {
-      propsData: {
-        headings: [
-          {
-            display: "ID",
-            column: "id",
-          },
-          {
-            display: "Name",
-            column: "name",
-            search: true
-          }
-        ],
-        data: data,
-        checked: onCheck
-      }
-    })
-
-    wrapper.setProps({ checkbox: true })
-    wrapper.vm.$nextTick(() => {
-      expect(wrapper.find('.listable-checkbox').exists()).toBe(true)
-      wrapper.find('.listable-th .listable-checkbox').trigger('click')
-      expect(wrapper.emitted('checked')).toBeTruthy();
-      // checked all means all data must be in checked array
-      expect(wrapper.vm.$data.checked.length).toBe(data.length);
-      // uncheck all
-      wrapper.find('.listable-th .listable-checkbox').trigger('click')
-      expect(wrapper.emitted('checked')).toBeTruthy();
-      expect(wrapper.vm.$data.checked.length).toBe(0);
-      // check single
-      const tr = wrapper.find('.listable-body .listable-tr:first-child')
-      const checkbox = tr.find('.listable-td .listable-checkbox')
-      checkbox.trigger('click')
-      expect(wrapper.vm.$data.checked.length).toBe(1);
-      wrapper.vm.$nextTick(() => {
-        expect(tr.classes()).toContain('listable-tr-checked')
-        // uncheck single
-        wrapper.find('.listable-td .listable-checkbox:first-child').trigger('click')
-        expect(wrapper.vm.$data.checked.length).toBe(0);
-      })
-    });
-  })
-
   test('Scoped slots', () => {
     const headings = [
       {
@@ -107,26 +48,6 @@ describe('Component', () => {
     wrapper.vm.$nextTick(() => {
       expect(wrapper.find('.listable-td-col-name').html()).toContain('<div class="name">Name: test</div>')
     })
-  })
-
-  test('Checkbox with empty data', () => {
-    const wrapper = shallowMount(Listable, {
-      propsData: { 
-        checkbox: true,
-        headings: [
-          {
-            display: "ID",
-            column: "id",
-          },
-          {
-            display: "Name",
-            column: "name",
-          }
-        ]
-      }
-    })
-
-    expect(wrapper.find('.listable-checkbox').exists()).toBe(false)
   })
 
   test('Search', () => {
