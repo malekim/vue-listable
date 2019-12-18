@@ -1,5 +1,6 @@
-import { shallowMount } from '@vue/test-utils'
-import Listable from '../src/js/components/listable';
+import { shallowMount } from '@vue/test-utils';
+import Listable from '../src/js/components/Listable';
+import ListableHead from '../src/js/components/ListableHead';
 
 const first_page_data = [
   {
@@ -26,53 +27,51 @@ const second_page_data = [
     paid: true
   }
 ];
-describe('Component', () => {
-  test('Hooks', () => {
-    const onHook = function (calculated, props, column) {
-      if (column == 'price') {
-        calculated.class['paid'] = props.paid;
-      }
+test('Hooks', async () => {
+  const onHook = function (calculated, props, column) {
+    if (column == 'price') {
+      calculated.class['paid'] = props.paid;
     }
+  }
 
-    const onRowHook = function (calculated, props) {
-      calculated.class['finished'] = props.paid;
+  const onRowHook = function (calculated, props) {
+    calculated.class['finished'] = props.paid;
+  }
+
+  const headings = [
+    {
+      display: "ID",
+      column: "id",
+    },
+    {
+      display: "Price",
+      column: "price"
     }
+  ];
 
-    const headings = [
-      {
-        display: "ID",
-        column: "id",
-      },
-      {
-        display: "Price",
-        column: "price"
-      }
-    ];
-    let swrapper = shallowMount(Listable, {
-      propsData: {
-        headings: headings,
-        hook: onHook,
-        rowHook: onRowHook
-      }
-    });
+  let swrapper = shallowMount(Listable, {
+    propsData: {
+      headings: headings,
+      data: first_page_data,
+      hook: onHook,
+      rowHook: onRowHook
+    },
+    stubs: {
+      ListableHead: ListableHead
+    }
+  });
 
-    swrapper.setProps({ data: first_page_data })
+  const first_tr = swrapper.find('.listable-body .listable-tr:first-child');
 
-    const first_tr = swrapper.find('.listable-body .listable-tr:first-child');
-
-    swrapper.vm.$nextTick(() => {
-      let price_td = first_tr.find('.listable-td-col-price');
-      expect(price_td.classes()).toContain('paid');
-      expect(first_tr.classes()).toContain('finished');
-      swrapper.setProps({ data: second_page_data });
-      swrapper.vm.$nextTick(() => {
-        expect(price_td.classes()).not.toContain('paid');
-        expect(first_tr.classes()).not.toContain('finished');
-        swrapper.setProps({ data: first_page_data })
-        swrapper.vm.$nextTick(() => {
-          expect(price_td.classes()).toContain('paid');
-        });
-      });
-    })
-  })
+  await swrapper.vm.$nextTick();
+  let price_td = first_tr.find('.listable-td-col-price');
+  expect(price_td.classes()).toContain('paid');
+  expect(first_tr.classes()).toContain('finished');
+  swrapper.setProps({ data: second_page_data });
+  await swrapper.vm.$nextTick();
+  expect(price_td.classes()).not.toContain('paid');
+  expect(first_tr.classes()).not.toContain('finished');
+  swrapper.setProps({ data: first_page_data })
+  await swrapper.vm.$nextTick();
+  expect(price_td.classes()).toContain('paid');
 })

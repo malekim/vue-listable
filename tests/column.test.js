@@ -1,6 +1,6 @@
 import Column from '../src/js/model/column';
 
-it('Valid sort direction', () => {
+test('Valid sort direction', () => {
   let col = new Column(
     false,
     false,
@@ -26,7 +26,7 @@ it('Valid sort direction', () => {
   expect(col2.descending).toEqual(true);
 });
 
-it('Opposite sort', () => {
+test('Opposite sort', () => {
   let col = new Column(
     false,
     false,
@@ -41,7 +41,7 @@ it('Opposite sort', () => {
   expect(col.descending).toEqual(true);
 });
 
-it('Reset sort', () => {
+test('Reset sort', () => {
   let col = new Column(
     false,
     false,
@@ -57,14 +57,14 @@ it('Reset sort', () => {
   expect(col.descending).toEqual(false);
 });
 
-it('Test checkbox', () => {
+test('Test checkbox', () => {
   let col = new Column(
     true
   );
   expect(col.classes).toHaveProperty('listable-th-checkbox');
 });
 
-it('Test column name', () => {
+test('Test column name', () => {
   let col = new Column(
     false,
     false,

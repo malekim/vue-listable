@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils'
-import Listable from '../src/js/components/listable';
+import Listable from '../src/js/components/Listable';
+import ListableHead from '../src/js/components/ListableHead';
 
 jest.useFakeTimers();
 
@@ -51,6 +52,9 @@ describe('Mobile', () => {
             indent: 2
           }
         ]
+      },
+      stubs: {
+        ListableHead: ListableHead
       }
     })
     mwrapper.setProps({ responsive: true });

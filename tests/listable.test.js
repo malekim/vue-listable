@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { shallowMount } from '@vue/test-utils'
-import Listable from '../src/js/components/listable';
+import Listable from '../src/js/components/Listable';
+import ListableHead from '../src/js/components/ListableHead';
 
 jest.useFakeTimers();
 
@@ -41,6 +42,9 @@ describe('Component', () => {
       scopedSlots: {
         name: '<div class="name">Name: {{ props.name }}</div>'
       },
+      stubs: {
+        ListableHead: ListableHead
+      }
     });
 
     wrapper.setProps({ responsive: true })
@@ -50,7 +54,7 @@ describe('Component', () => {
     })
   })
 
-  test('Search', () => {
+  test('Search', async () => {
     const onSearch = jest.fn()
     const headings = [
       {
@@ -75,23 +79,27 @@ describe('Component', () => {
     ];
     let swrapper = shallowMount(Listable, {
       propsData: {
+        headings: headings,
+        data: data
+      },
+      listeners: {
         search: onSearch
+      },
+      stubs: {
+        ListableHead: ListableHead
       }
     });
 
-    swrapper.setProps({ headings: headings, data: data })
-
-    swrapper.vm.$nextTick(() => {
-      expect(swrapper.find('.listable-tr-search').exists()).toBe(true)
-      swrapper.find(".listable-search").setValue("Lukas")
-      swrapper.find(".listable-search").trigger("input")
-      expect(setTimeout).toHaveBeenCalled();
-      jest.runAllTimers()
-      expect(swrapper.emitted('search')).toBeTruthy();
-    })
+    await swrapper.vm.$nextTick();
+    expect(swrapper.find('.listable-tr-search').exists()).toBe(true)
+    swrapper.find(".listable-search").setValue("Lukas")
+    swrapper.find(".listable-search").trigger("input")
+    expect(setTimeout).toHaveBeenCalled();
+    jest.runAllTimers()
+    expect(swrapper.emitted('search')).toBeTruthy();
   })
 
-  test('Sortable', () => {
+  test('Sortable', async () => {
     const onSort = jest.fn()
     const headings = [
       {
@@ -115,18 +123,22 @@ describe('Component', () => {
       }
     ];
     let swrapper = shallowMount(Listable, {
+      propsData: {
+        headings: headings,
+        data: data
+      },
       listeners: {
         sorted: onSort
+      },
+      stubs: {
+        ListableHead: ListableHead
       }
     });
 
-    swrapper.setProps({ headings: headings, data: data })
-
-    swrapper.vm.$nextTick(() => {
-      expect(swrapper.find('.sortable.listable-th-col-name').exists()).toBe(true)
-      swrapper.find('.sortable.listable-th-col-name').trigger('click')
-      expect(swrapper.emitted('sorted')).toBeTruthy();
-    })
+    await swrapper.vm.$nextTick();
+    expect(swrapper.find('.sortable.listable-th-col-name').exists()).toBe(true)
+    swrapper.find('.sortable.listable-th-col-name').trigger('click')
+    expect(swrapper.emitted('sorted')).toBeTruthy();
   })
 
 
@@ -159,6 +171,9 @@ describe('Component', () => {
       propsData: {
         headings: headings,
         data: data
+      },
+      stubs: {
+        ListableHead: ListableHead
       }
     });
 

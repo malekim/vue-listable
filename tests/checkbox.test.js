@@ -1,5 +1,6 @@
-import { shallowMount } from '@vue/test-utils'
-import Listable from '../src/js/components/listable';
+import { shallowMount } from '@vue/test-utils';
+import Listable from '../src/js/components/Listable';
+import ListableHead from '../src/js/components/ListableHead';
 
 const headings = [
   {
@@ -50,17 +51,21 @@ test('Checkbox', async () => {
 
   const wrapper = shallowMount(Listable, {
     propsData: {
+      checkbox: true,
       headings: headings,
-      data: first_page_data,
+      data: first_page_data
+    },
+    listeners: {
       checked: onCheck
+    },
+    stubs: {
+      ListableHead: ListableHead
     }
   })
 
-  wrapper.setProps({ checkbox: true })
   await wrapper.vm.$nextTick();
   expect(wrapper.element).toMatchSnapshot()
   expect(wrapper.find('.listable-checkbox').exists()).toBe(true);
-
   wrapper.find('.listable-th .listable-checkbox').trigger('click');
   expect(wrapper.emitted('checked')).toBeTruthy();
   // checked all means all data must be in checked array
@@ -83,7 +88,7 @@ test('Checkbox', async () => {
 
 test('Checkbox with empty data', () => {
   const wrapper = shallowMount(Listable, {
-    propsData: { 
+    propsData: {
       checkbox: true,
       headings: [
         {
@@ -95,6 +100,9 @@ test('Checkbox with empty data', () => {
           column: "name",
         }
       ]
+    },
+    stubs: {
+      ListableHead: ListableHead
     }
   })
 
@@ -118,6 +126,9 @@ test('Data change', async () => {
       headings: headings,
       hook: onHook,
       rowHook: onRowHook
+    },
+    stubs: {
+      ListableHead: ListableHead
     }
   });
 

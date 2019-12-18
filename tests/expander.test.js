@@ -1,11 +1,11 @@
 import { mount } from '@vue/test-utils'
 import { shallowMount } from '@vue/test-utils'
-import Expander from '../src/js/components/expander';
-import Listable from '../src/js/components/listable';
+import Listable from '../src/js/components/Listable';
+import ListableExpander from '../src/js/components/ListableExpander';
 
 describe('Component', () => {
   test('Is a Vue instance', () => {
-    const wex = mount(Expander)
+    const wex = mount(ListableExpander)
     expect(wex.isVueInstance()).toBeTruthy()
   })
 
@@ -39,7 +39,7 @@ describe('Component', () => {
         data: data
       },
       stubs: {
-        'expander': true
+        ListableExpander: ListableExpander
       }
     });
 
