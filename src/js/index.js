@@ -1,8 +1,8 @@
-import listable from './components/listable';
+import Listable from './components/Listable';
 
 const VueListable = {
   install(Vue, options) {
-    Vue.component("listable", listable);
+    Vue.component("Listable", Listable);
   }
 };
 export default VueListable;

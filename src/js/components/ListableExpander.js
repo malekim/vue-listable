@@ -1,4 +1,4 @@
-const Expander = {
+const ListableExpander = {
   render: function (createElement) {
     return createElement(
       "tr",
@@ -39,4 +39,4 @@ const Expander = {
     }
   }
 }
-export default Expander;
+export default ListableExpander;

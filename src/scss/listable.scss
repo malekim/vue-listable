@@ -5,17 +5,17 @@
   border-spacing: 0;
   font-size: 0.8rem;
 
-  .listable-header,
+  .listable-head,
   .listable-body {
     display: table-row-group;
   }
 
-  .listable-header-row,
+  .listable-head-row,
   .listable-tr {
     display: table-row;
   }
 
-  .listable-header {
+  .listable-head {
     background-color: rgba(55, 131, 209, 0.2);
     .listable-th {
       font-weight: 500;
@@ -90,7 +90,7 @@
       font-weight: 500;
       border-bottom: 1px solid rgba(219, 219, 219, 0.5);
     }
-    .listable-header {
+    .listable-head {
       display: none;
     }
     .listable-body,

@@ -1,9 +1,10 @@
-import Expander from './expander';
-import Column from '../model/column';
+import ListableExpander from './ListableExpander';
+import ListableHead from './ListableHead';
 
 const listable = {
   components: {
-    Expander
+    ListableExpander,
+    ListableHead
   },
   render(createElement) {
     const table = this.generateTable(createElement);
@@ -58,12 +59,6 @@ const listable = {
       checked: [],
       // IDs of expanded rows
       expanded: [],
-      // is_searchable
-      searchable: false,
-      // columns with search
-      searched: {},
-      // needed to debounce search
-      searchTimeout: null,
       // needed to debounce resize
       resizeTimeout: null,
       // is responsive mode turned on
@@ -75,40 +70,12 @@ const listable = {
   mounted() {
     this.$nextTick(() => {
       this.checkErrors();
-      this.columns = this.calculateColumns();
-      this.searchable = this.isSearchable();
       if (this.responsive) {
         window.addEventListener('resize', this.handleResponsive);
       }
     });
   },
   methods: {
-    calculateColumns() {
-      let columns = [];
-      if (this.checkbox) {
-        let column = new Column(
-          false,
-          true,
-          "",
-          false,
-          "",
-          true
-        );
-        columns.push(column);
-      }
-      for (const index in this.headings) {
-        let column = new Column(
-          this.headings[index].search,
-          false,
-          this.headings[index].display,
-          this.headings[index].sortable,
-          this.headings[index].column,
-          this.headings[index].ascending
-        );
-        columns.push(column);
-      }
-      return columns;
-    },
     checkErrors() {
       for (const i in this.headings) {
         let column = this.headings[i].column;
@@ -120,7 +87,7 @@ const listable = {
       }
     },
     generateTable(createElement) {
-      const header = this.generateHeader(createElement);
+      const head = this.generateHead(createElement);
       const body = this.generateBody(createElement);
       return createElement(
         "table",
@@ -132,144 +99,10 @@ const listable = {
           ref: "table"
         },
         [
-          header,
+          head,
           body
         ]
       );
-    },
-    generateHeader(createElement) {
-      return createElement(
-        "thead",
-        {
-          class: "listable-header"
-        },
-        this.generateHeaderRows(createElement)
-      );
-    },
-    generateHeaderRows(createElement) {
-      const header_rows = [];
-
-      header_rows.push(createElement(
-        "tr",
-        {
-          class: {
-            "listable-tr": true,
-            "listable-tr-checked": this.checked.length > 0 && this.checked.length === this.data.length
-          }
-        },
-        [
-          this.generateHeaderCells(createElement)
-        ]
-      ));
-      
-      if (this.searchable && this.data.length > 0) {
-        header_rows.push(createElement(
-          "tr",
-          {
-            class: {
-              "listable-tr": true,
-              "listable-tr-checked": this.checked.length > 0 && this.checked.length === this.data.length,
-              "listable-tr-search": true
-            }
-          },
-          [
-            this.generateHeaderSearchCells(createElement)
-          ]
-        ));
-      }
-
-      return header_rows;
-    },
-    isSearchable() {
-      for (const index in this.headings) {
-        if (this.headings[index].search) {
-          return true;
-        }
-      }
-      return false;
-    },
-    generateHeaderSearchCells(createElement) {
-      const header_cells = [];
-      for (const index in this.columns) {
-        let elements = [];
-        if (this.columns[index].searchable) {
-          elements.push(
-            createElement(
-              "input",
-              {
-                class: "listable-search",
-                on: {
-                  input: (event) => {
-                    // debounce
-                    clearTimeout(this.searchTimeout);
-                    this.searchTimeout = setTimeout(() => {
-                      this.$emit("input", event.target.value);
-                      this.searched[this.columns[index].column] = event.target.value;
-                      this.$emit("search", this.searched);
-                    }, 500);
-                  }
-                }
-              }
-            )
-          );
-        }
-        let header_cell = createElement(
-          "th",
-          {
-            class: [
-              "listable-th"
-            ]
-          },
-          elements
-        )
-        header_cells.push(header_cell);
-      }
-      return header_cells;
-    },
-    generateHeaderCells(createElement) {
-      const header_cells = [];
-      for (const index in this.columns) {
-        let elements = [];
-        if (this.columns[index].isCheckbox) {
-          // if no data, do not render empty checkbox column
-          if (this.data.length == 0) {
-            continue;
-          }
-          elements.push(
-            createElement(
-              "span",
-              {
-                class: {
-                  "listable-checkbox": true
-                },
-                on: {
-                  click: this.handleAllCheckbox
-                }
-              }
-            )
-          );
-        }
-        if (this.columns[index].display) {
-          elements.push(this.columns[index].display);
-        }
-        let handlers = {};
-        if (this.columns[index].sortable) {
-          handlers.click = ((event) => {
-            this.handleSort(event, index);
-          });
-        }
-
-        let header_cell = createElement(
-          "th",
-          {
-            class: this.columns[index].classes,
-            on: handlers
-          },
-          elements
-        )
-        header_cells.push(header_cell);
-      }
-      return header_cells;
     },
     generateBody(createElement) {
       return createElement(
@@ -303,27 +136,12 @@ const listable = {
       }
       this.$emit("checked", this.checked);
     },
-    handleSort(event, index) {
-      event.stopPropagation();
-      // find column by index
-      let column = this.columns[index];
-      this.columns.map((obj) => {
-        if (obj.column != column.column) {
-          obj.resetSort();
-        }
-      });
-      this.columns[index].oppositeSort();
-      let sortable = {
-        column: column.column,
-        ascending: column.ascending
-      };
-      this.$emit("sorted", sortable);
-      this.$forceUpdate();
-    },
     handleAllCheckbox(event) {
       event.stopPropagation();
-
-      if (this.checked.length > 0) {
+      
+      // if all are checked, just uncheck all
+      // if nothing is checked or some are checked, check all
+      if (this.checked.length == this.data.length) {
         this.checked = [];
       }
       else {
@@ -447,6 +265,7 @@ const listable = {
           )
         );
       }
+
       for (const index in this.columns) {
         if (this.columns[index].isCheckbox) {
           continue;
@@ -516,7 +335,7 @@ const listable = {
     },
     generateExpander(createElement, row) {
       return createElement(
-        "Expander",
+        "ListableExpander",
         {
           props: {
             colspan: this.columns.length,
@@ -525,6 +344,26 @@ const listable = {
           }
         }
       );
+    },
+    generateHead(createElement, row) {
+      return createElement(
+        "ListableHead",
+        {
+          props: {
+            checkbox: this.checkbox,
+            checked: this.checked,
+            data: this.data,
+            headings: this.headings
+          },
+          on: {
+            updateColumns: this.updateColumns,
+            handleAllCheckbox: this.handleAllCheckbox
+          }
+        }
+      );
+    },
+    updateColumns(columns) {
+      this.columns = columns;
     },
     generatePaginator(createElement) {
       if (this.$slots.paginator) {
