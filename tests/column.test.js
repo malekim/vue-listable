@@ -1,4 +1,4 @@
-import Column from '../src/js/model/column';
+import Column from '../src/js/entity/Column';
 
 test('Valid sort direction', () => {
   let col = new Column(

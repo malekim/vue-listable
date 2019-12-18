@@ -1,4 +1,4 @@
-import Column from '../model/column';
+import Column from '../entity/Column';
 
 const ListableHead = {
   render: function (createElement) {
