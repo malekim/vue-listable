@@ -1,7 +1,7 @@
 import ListableExpander from './ListableExpander';
 import ListableHead from './ListableHead';
 
-const listable = {
+const Listable = {
   components: {
     ListableExpander,
     ListableHead
@@ -416,4 +416,4 @@ const listable = {
     }
   }
 }
-export default listable;
+export default Listable;

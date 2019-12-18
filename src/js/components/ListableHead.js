@@ -39,6 +39,11 @@ const ListableHead = {
       default: () => []
     }
   },
+  mounted() {
+    this.searchable = this.isSearchable();
+    this.columns = this.calculateColumns();
+    this.$emit("updateColumns", this.columns);
+  },
   methods: {
     calculateColumns() {
       let columns = [];
@@ -210,11 +215,6 @@ const ListableHead = {
       }
       return false;
     }
-  },
-  mounted() {
-    this.searchable = this.isSearchable();
-    this.columns = this.calculateColumns();
-    this.$emit("updateColumns", this.columns);
   }
 }
 export default ListableHead;
