@@ -1,0 +1,118 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Checkbox 1`] = `
+<div
+  class="listable-container"
+>
+  <table
+    class="listable"
+  >
+    <thead
+      class="listable-head"
+    >
+      <tr
+        class="listable-tr"
+      >
+        <th
+          class="listable-th listable-th-checkbox"
+        >
+          <span
+            class="listable-checkbox"
+          />
+        </th>
+        <th
+          class="listable-th listable-th-col-id"
+        >
+          ID
+        </th>
+        <th
+          class="listable-th listable-th-col-price"
+        >
+          Price
+        </th>
+        <th
+          class="listable-th listable-th-col-name"
+        >
+          Name
+        </th>
+      </tr>
+      <tr
+        class="listable-tr listable-tr-search"
+      >
+        <th
+          class="listable-th"
+        />
+        <th
+          class="listable-th"
+        />
+        <th
+          class="listable-th"
+        />
+        <th
+          class="listable-th"
+        >
+          <input
+            class="listable-search"
+          />
+        </th>
+      </tr>
+    </thead>
+    <tbody
+      class="listable-body"
+    >
+      <tr
+        class="listable-tr"
+      >
+        <td
+          class="listable-td listable-td-checkbox"
+        >
+          <span
+            class="listable-checkbox"
+          />
+        </td>
+        <td
+          class="listable-td listable-td-col-id"
+        >
+          1
+        </td>
+        <td
+          class="listable-td listable-td-col-price"
+        >
+          500
+        </td>
+        <td
+          class="listable-td listable-td-col-name"
+        >
+          Apple
+        </td>
+      </tr>
+      <tr
+        class="listable-tr"
+      >
+        <td
+          class="listable-td listable-td-checkbox"
+        >
+          <span
+            class="listable-checkbox"
+          />
+        </td>
+        <td
+          class="listable-td listable-td-col-id"
+        >
+          2
+        </td>
+        <td
+          class="listable-td listable-td-col-price"
+        >
+          1000
+        </td>
+        <td
+          class="listable-td listable-td-col-name"
+        >
+          Banana
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
