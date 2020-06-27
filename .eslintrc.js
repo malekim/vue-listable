@@ -2,31 +2,26 @@ module.exports = {
   root: true,
   env: {
     browser: true,
-    node: true
+    node: true,
+    es2020: true,
   },
   parserOptions: {
-    "parser": "babel-eslint",
-    "ecmaVersion": 2017,
-    "sourceType": "module"
+    parser: '@typescript-eslint/parser',
+    ecmaVersion: 2020,
+    sourceType: 'module',
   },
+  extends: [
+    'prettier',
+    'prettier/vue',
+    'plugin:prettier/recommended',
+    'plugin:@typescript-eslint/recommended',
+  ],
+  plugins: ['prettier'],
   // add your custom rules here
   rules: {
-    "indent": [2, 2],
-    "comma-spacing": ["error", { before: false, after: true }],
-    "space-before-function-paren": [
-      "error",
-      { anonymous: "always", named: "never", asyncArrow: "always" }
-    ],
-    "no-console": ["off"],
-    "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off"
+    camelcase: ['off'],
+    '@typescript-eslint/camelcase': ['off'],
+    '@typescript-eslint/no-explicit-any': ['off'],
+    '@typescript-eslint/no-empty-function': ['error', { 'allow': ['arrowFunctions'] }]
   },
-  "overrides": [
-    {
-      "files": ["build/*"],
-      "rules": {
-        "space-before-function-paren": ["off"],
-        "comma-spacing": ["off"]
-      }
-    }
-  ],
-};
+}
