@@ -1,20 +1,14 @@
 module.exports = {
-  verbose: true,
-  moduleFileExtensions: [
-    "js",
-    "json"
-  ],
-  snapshotSerializers: ["jest-serializer-vue"],
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/$1',
+    '^~/(.*)$': '<rootDir>/$1',
+  },
+  moduleFileExtensions: ['ts', 'js'],
   transform: {
-    "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
+    '^.+\\.tsx?$': 'ts-jest',
   },
   collectCoverage: true,
-  collectCoverageFrom: [
-    "src/**",
-    "!**/node_modules/**"
-  ],
-  coverageReporters: [
-    "html",
-    "text-summary"
-  ],
+  collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
+  coverageReporters: ['text', 'html', 'json'],
+  coverageDirectory: '<rootDir>/coverage/',
 }
