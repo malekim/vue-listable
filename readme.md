@@ -1,4 +1,4 @@
-# vue-listable
+# vue-listable [![codecov](https://codecov.io/gh/malekim/vue-listable/branch/master/graph/badge.svg)](https://codecov.io/gh/malekim/vue-listable)
 
 ## Getting started
 
