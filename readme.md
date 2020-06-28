@@ -53,7 +53,7 @@ module.exports = {
 Inside template use listable component:
 
 ```html
-<listable />
+<Listable />
 ```
 
 ## Options
@@ -88,7 +88,7 @@ Default: none
 Executes after checkbox is checked.
 
 ```html
-<listable @checked="onCheck" />
+<Listable @checked="onCheck" />
 <script>
 export default {
   methods: {
@@ -109,7 +109,7 @@ Default: none
 Executes after column sort. Each column except clicked one is reset to default sort direction.
 
 ```html
-<listable :headings="headings" @sorted="onSort" />
+<Listable :headings="headings" @sorted="onSort" />
 <script>
 export default {
   data: () => ({
@@ -155,7 +155,7 @@ Default: none
 Executes after row expand.
 
 ```html
-<listable @expanded="onExpanded" />
+<Listable @expanded="onExpanded" />
 <script>
 export default {
   methods: {
@@ -266,7 +266,7 @@ Default: false
 If set to true, first column will contain checkbox.
 
 ```html
-<listable :checkbox="true" />
+<Listable :checkbox="true" />
 ```
 
 ### expandable
@@ -278,11 +278,11 @@ Default: false
 If set to true, row may be expanded with expander slot.
 
 ```html
-<listable :expandable="true">
+<Listable :expandable="true">
   <div slot="expander" slot-scope="item">
     {{ item }}
   </div>
-</listable>
+</Listable>
 ```
 
 ### responsive
@@ -295,7 +295,7 @@ If set to true, listable will handle table
 responsiveness.
 
 ```html
-<listable :responsive="true" />
+<Listable :responsive="true" />
 ```
 
 ## Hooks
@@ -315,7 +315,7 @@ Why not refs? Refs causes update, so update for each row is slower than using ha
 ```html
 <template>
   <div>
-    <listable
+    <Listable
       :headings="headings"
       :data="items"
       :hook="onHook"
@@ -386,11 +386,11 @@ export default {
 ## Handle empty rows
 
 ```html
-<listable>
+<Listable>
   <template slot="empty">
     No data
   </template>
-</listable>
+</Listable>
 ```
 
 ## Typescript
