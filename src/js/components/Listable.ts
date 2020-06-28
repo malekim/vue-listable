@@ -4,6 +4,7 @@ import ListableHead from './ListableHead'
 import Heading from '../entity/Heading'
 
 const Listable = Vue.extend({
+  name: 'VueListable',
   render(createElement: CreateElement): VNode {
     const table = this.generateTable(createElement)
     const paginator = this.generatePaginator(createElement)
@@ -421,7 +422,9 @@ const Listable = Vue.extend({
   },
   updated() {
     this.$nextTick(() => {
-      this.handleResponsive()
+      if (this.responsive) {
+        this.handleResponsive()
+      }
     })
   },
   beforeDestroy() {
