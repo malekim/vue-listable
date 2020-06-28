@@ -86,10 +86,12 @@ const Listable = Vue.extend({
     checkErrors(): void {
       for (let i = 0, len = this.headings.length; i < len; i++) {
         const column = this.headings[i].column
-        for (let d = 0, dlen = this.data.length; d < dlen; d++) {
-          if (!this.data[d].hasOwnProperty(column)) {
-            console.error(`Data does not contain column ${column}`)
-          }
+        if (column === undefined) {
+          console.error(
+            `Heading with data ${JSON.stringify(
+              this.headings[i]
+            )} does not contain column`
+          )
         }
       }
     },

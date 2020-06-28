@@ -196,28 +196,30 @@ describe('Component', () => {
   test('Expected error', () => {
     const consoleSpy = jest.spyOn(console, 'error')
 
+    const errorPropsData: any = {
+      headings: [
+        {
+          display: 'ID',
+          column: 'id',
+        },
+        {
+          display: 'Name',
+        },
+      ],
+    }
+
     shallowMount(Listable, {
-      propsData: {
-        headings: [
-          {
-            display: 'ID',
-            column: 'id',
-          },
-          {
-            display: 'Name',
-            column: 'name',
-          },
-        ],
-        data: [
-          {
-            id: 1,
-          },
-        ],
-      },
+      propsData: errorPropsData,
     })
 
     console.error = (...args: any) => {
-      expect(args.includes('Data does not contain column name')).toBe(true)
+      expect(
+        args.includes(
+          `Heading with data ${JSON.stringify(
+            errorPropsData.headings[1]
+          )} does not contain column`
+        )
+      ).toBe(true)
     }
 
     consoleSpy.mockReset()
