@@ -393,6 +393,22 @@ export default {
 </listable>
 ```
 
+## Typescript
+
+Add type to tsconfig.json
+```json
+{
+  "compilerOptions": {
+    // some options
+    // ...
+    // some options
+    "types": [
+      "vue-listable/types"
+    ]
+  }
+}
+```
+
 ## License
 
 `vue-listable` uses the MIT License (MIT). Please see the [license file](https://github.com/malekim/vue-listable/blob/master/LICENSE) for more information.
