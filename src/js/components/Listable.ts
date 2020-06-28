@@ -22,6 +22,10 @@ const Listable = Vue.extend({
     ListableHead,
   },
   props: {
+    tableClasses: {
+      type: Array as PropType<string[]>,
+      default: (): string[] => [],
+    },
     headings: {
       type: Array as PropType<Heading[]>,
       default: (): Heading[] => [],
@@ -104,6 +108,11 @@ const Listable = Vue.extend({
           class: {
             listable: true,
             'responsive-mode': this.responsiveMode,
+            // parse array elements to { class-name: true }
+            ...this.tableClasses.reduce(
+              (map: any, obj: string) => ((map[obj] = true), map),
+              {}
+            ),
           },
           ref: 'table',
         },

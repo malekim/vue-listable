@@ -58,6 +58,39 @@ describe('Component', () => {
     })
   })
 
+  test('Classes', async () => {
+    const headings = [
+      {
+        display: 'ID',
+        column: 'id',
+      },
+      {
+        display: 'Name',
+        column: 'name',
+      },
+    ]
+    const data = [
+      {
+        id: 1,
+        name: 'test',
+      },
+    ]
+    const wrapper = shallowMount(Listable, {
+      propsData: {
+        headings: headings,
+        data: data,
+        tableClasses: ['table', 'is-striped'],
+      },
+      stubs: {
+        ListableHead: ListableHead,
+      },
+    })
+
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.find('table').html()).toContain('table is-striped')
+  })
+
   test('Search', async () => {
     const onSearch = jest.fn()
     const headings = [

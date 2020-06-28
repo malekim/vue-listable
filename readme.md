@@ -167,6 +167,18 @@ export default {
 </script>
 ```
 
+### tableClasses
+
+Type: Array
+
+Default: empty array
+
+```html
+<Listable :tableClasses="['table', 'is-striped']" />
+```
+
+Array with CSS classes added to table HTML element.
+
 ### headings
 
 Type: Array
